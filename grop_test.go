@@ -9,12 +9,13 @@ import (
 
 func TestSearch(t *testing.T) {
 	cases := []struct {
+		label    string
 		term     string
 		filepath string
 		results  string
 	}{
-		{term: "", filepath: "test_files/A_Mad_Tea_Party.txt", results: ""},
-		{term: "thing", filepath: "test_files/A_Mad_Tea_Party.txt", results: strings.Join([]string{`Alice looked all round the table, but there was nothing on it but tea. "I don't see any wine," she remarked.`,
+		{label: "Handle empty term", term: "", filepath: "test_files/A_Mad_Tea_Party.txt", results: ""},
+		{label: "Return lines matching term", term: "thing", filepath: "test_files/A_Mad_Tea_Party.txt", results: strings.Join([]string{`Alice looked all round the table, but there was nothing on it but tea. "I don't see any wine," she remarked.`,
 			`"I do," Alice hastily replied; "at least -- at least I mean what I say -- that's the same thing, you know."`,
 			`"Not the same thing a bit!" said the Hatter. "Why, you might just as well say that "I see what I eat" is the same thing as "I eat what I see!"`,
 			`"You might just as well say," added the March Hare, "that "I like what I get" is the same thing as "I get what I like"!"`,
@@ -39,7 +40,7 @@ func TestSearch(t *testing.T) {
 
 		got := buf.String()
 		if got != want {
-			t.Errorf("Search Failed: %q.\nGot: %q\nwant %q", c.term, got, want)
+			t.Errorf("Search Failed: %q.\nGot: %q\nwant %q", c.label, got, want)
 		}
 	}
 }
