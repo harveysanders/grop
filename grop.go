@@ -7,6 +7,10 @@ import (
 )
 
 func Search(w io.Writer, r io.Reader, term string) error {
+	if term == "" {
+		return nil
+	}
+
 	res := []string{}
 	b, err := io.ReadAll(r)
 	if err != nil {
