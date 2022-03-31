@@ -1,19 +1,36 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 func Search(w io.Writer, r io.Reader, term string) error {
+	res := []string{}
+	b, err := io.ReadAll(r)
+	if err != nil {
+		return err
+	}
 
+	// split into lines
+	lines := strings.Split(string(b), "\n")
+	for _, l := range lines {
+		// Collect all matching strings
+		if strings.Contains(l, term) {
+			res = append(res, l)
+		}
+	}
+
+	// Write results back to Writer
+	if _, err := io.WriteString(w, strings.Join(res, "\n")+"\n"); err != nil {
+		return err
+	}
 	return nil
 }
 
 func run(args []string, w io.Writer, r io.Reader) error {
 	term := args[0]
-	fmt.Println(term)
 
 	if len(args) == 1 {
 		// Use stdin

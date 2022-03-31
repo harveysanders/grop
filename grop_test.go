@@ -13,8 +13,10 @@ func TestSearch(t *testing.T) {
 		results  string
 	}{
 		{term: "power", filepath: "test_files/Kendrick-lamar-dna-lyrics.txt", results: `I got power, poison, pain, and joy inside my DNA
-	The reason my power's here on earth
-	Money and power, the mecca of marriages`},
+The reason my power's here on earth
+Money and power, the mecca of marriages
+`,
+		},
 	}
 
 	for _, c := range cases {
