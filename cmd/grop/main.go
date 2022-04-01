@@ -20,7 +20,7 @@ func init() {
 func main() {
 	flag.Parse()
 	var in io.Reader
-	args := os.Args[1:]
+	args := flag.Args()
 
 	if len(args) == 0 {
 		usage()
