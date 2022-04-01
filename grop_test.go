@@ -25,16 +25,16 @@ func TestSearch(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		want := c.results
-		// r, err := os.ReadFile(c.filepath)
-		file, err := os.OpenFile(c.filepath, os.O_RDONLY, os.ModePerm)
 		var buf bytes.Buffer
+		want := c.results
 
+		file, err := os.Open(c.filepath)
 		if err != nil {
 			t.Errorf("Unexpected error reading file: %q", err)
 		}
+		defer file.Close()
 
-		if err = Search(&buf, file, c.term); err != nil {
+		if err = Search(&buf, file, c.term, Options{}); err != nil {
 			t.Errorf("Unexpected Search() error: %q", err)
 		}
 
@@ -43,4 +43,35 @@ func TestSearch(t *testing.T) {
 			t.Errorf("Search Failed: %q.\nGot: %q\nwant %q", c.label, got, want)
 		}
 	}
+}
+
+func TestSearchWithOpts(t *testing.T) {
+	var buf bytes.Buffer
+	term := "hat"
+	options := Options{
+		caseInsensitive: true,
+	}
+	inputLines := []string{
+		"This and that",
+		"Look at my hat!",
+		"this one, not THAT!",
+		"end",
+	}
+
+	searchDoc := strings.Join(inputLines, "\n")
+
+	r := strings.NewReader(searchDoc)
+
+	err := Search(&buf, r, term, options)
+	if err != nil {
+		t.Errorf("Unexpected Error %v", err)
+	}
+
+	want := strings.Join(inputLines[:3], "\n") + "\n"
+	got := buf.String()
+
+	if got != want {
+		t.Errorf("Case insensitive Search() failed.\nGot: %q\nWant: %q", got, want)
+	}
+
 }
