@@ -1,13 +1,14 @@
-package main
+package grop
 
 import (
 	"io"
+	"os"
 	"regexp"
 	"strings"
 )
 
 type Options struct {
-	caseInsensitive bool
+	IgnoreCase bool
 }
 
 func Search(w io.Writer, r io.Reader, term string, o Options) error {
@@ -16,7 +17,7 @@ func Search(w io.Writer, r io.Reader, term string, o Options) error {
 	}
 
 	m := "(?)" + term
-	if o.caseInsensitive {
+	if o.IgnoreCase {
 		m = "(?i)" + term
 	}
 	reg, err := regexp.Compile(m)
@@ -45,6 +46,32 @@ func Search(w io.Writer, r io.Reader, term string, o Options) error {
 
 	// Write results back to Writer
 	if _, err := io.WriteString(w, strings.Join(res, "\n")+"\n"); err != nil {
+		return err
+	}
+	return nil
+}
+
+func Run(args []string, w io.Writer, r io.Reader, opts Options) error {
+	term := args[0]
+
+	if len(args) == 1 {
+		// Use stdin
+		err := Search(os.Stdout, os.Stdin, term, opts)
+		if err != nil {
+			return err
+		}
+	}
+
+	// More than one arg, assume last arg is path to file
+	fp := args[len(args)-1]
+	file, err := os.Open(fp)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	err = Search(os.Stdout, file, term, opts)
+	if err != nil {
 		return err
 	}
 	return nil

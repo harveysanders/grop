@@ -1,4 +1,4 @@
-package main
+package grop
 
 import (
 	"bytes"
@@ -49,7 +49,7 @@ func TestSearchWithOpts(t *testing.T) {
 	var buf bytes.Buffer
 	term := "hat"
 	options := Options{
-		caseInsensitive: true,
+		IgnoreCase: true,
 	}
 	inputLines := []string{
 		"This and that",
