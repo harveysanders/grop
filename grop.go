@@ -40,7 +40,7 @@ func Search(w io.Writer, r io.Reader, term string, o Options) error {
 		loc := reg.FindStringIndex(l)
 
 		if loc != nil && loc[0] > -1 {
-			res = append(res, l)
+			res = append(res, colorizeMatch(l, loc[0], loc[1], Red))
 		}
 	}
 
@@ -75,4 +75,8 @@ func Run(args []string, w io.Writer, r io.Reader, opts Options) error {
 		return err
 	}
 	return nil
+}
+
+func colorizeMatch(s string, start, end int, color Color) string {
+	return s[:start] + color.String() + s[start:end] + Reset.String() + s[end:]
 }

@@ -14,10 +14,6 @@ const (
 	White
 )
 
-func colorize(s string, c Color) string {
-	return c.String() + s + Reset.String()
-}
-
 func (c Color) String() string {
 	switch c {
 	case Reset:
