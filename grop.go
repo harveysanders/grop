@@ -25,8 +25,6 @@ func Search(w io.Writer, r io.Reader, term string, o Options) error {
 		return err
 	}
 
-	res := []string{}
-
 	// TODO: Optimize by reading one line at a time
 	b, err := io.ReadAll(r)
 	if err != nil {
@@ -36,18 +34,18 @@ func Search(w io.Writer, r io.Reader, term string, o Options) error {
 	// split into lines
 	lines := strings.Split(string(b), "\n")
 	for _, l := range lines {
-		// Collect all matching strings
 		loc := reg.FindStringIndex(l)
 
 		if loc != nil && loc[0] > -1 {
-			res = append(res, colorizeMatch(l, loc[0], loc[1], Red))
+			// Write highlighted match back to Writer
+			match := colorizeMatch(l, loc[0], loc[1], Red)
+			_, err := io.WriteString(w, match)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
-	// Write results back to Writer
-	if _, err := io.WriteString(w, strings.Join(res, "\n")+"\n"); err != nil {
-		return err
-	}
 	return nil
 }
 
