@@ -1,10 +1,10 @@
 package grop
 
 import (
+	"bufio"
 	"io"
 	"os"
 	"regexp"
-	"strings"
 )
 
 type Options struct {
@@ -26,15 +26,9 @@ func Search(w io.Writer, r io.Reader, term string, o Options) error {
 		return err
 	}
 
-	// TODO: Optimize by reading one line at a time
-	b, err := io.ReadAll(r)
-	if err != nil {
-		return err
-	}
-
-	// split into lines
-	lines := strings.Split(string(b), "\n")
-	for _, l := range lines {
+	s := bufio.NewScanner(r)
+	for s.Scan() {
+		l := s.Text()
 		loc := reg.FindStringIndex(l)
 
 		if loc != nil && loc[0] > -1 {
