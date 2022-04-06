@@ -93,7 +93,7 @@ func TestSearchMulti(t *testing.T) {
 	// Checking for the following matches with the Red/Reset color characters surrounding matching patterns:
 	// - "The [Hat]ter ..."
 	// - "W[hat] day of the ..."
-	want := "The \x1b[31mHat\x1b[0mter was the first to break the silence. \"W\x1b[31mhat\x1b[0mt day of the month is it?\" he said, turning to Alice: he had taken his watch out of his pocket, and was looking at it uneasily, shaking it every now and then, and holding it to his ear.\n"
+	want := "The \x1b[31mHat\x1b[0mter was the first to break the silence. \"W\x1b[31mhat\x1b[0m day of the month is it?\" he said, turning to Alice: he had taken his watch out of his pocket, and was looking at it uneasily, shaking it every now and then, and holding it to his ear.\n"
 	got := buf.String()
 
 	if got != want {

@@ -10,6 +10,7 @@ import (
 type Options struct {
 	IgnoreCase    bool
 	WhenHighlight string // TODO: Use enum
+	isStdout      bool   // Needed to determine if colors should print
 }
 
 func Search(w io.Writer, r io.Reader, term string, o Options) error {
@@ -26,18 +27,19 @@ func Search(w io.Writer, r io.Reader, term string, o Options) error {
 		return err
 	}
 
-	s := bufio.NewScanner(r)
-	for s.Scan() {
-		l := s.Text()
-		loc := reg.FindStringIndex(l)
+	sc := bufio.NewScanner(r)
+	for sc.Scan() {
+		line := sc.Text()
+		matches := reg.FindAllString(line, -1)
+		if matches == nil {
+			continue
+		}
 
-		if loc != nil && loc[0] > -1 {
-			// Write highlighted match back to Writer
-			match := highlightMatch(l, loc[0], loc[1], Red, o.WhenHighlight)
-			_, err := io.WriteString(w, match+"\n")
-			if err != nil {
-				return err
-			}
+		// Handle color option
+		res := colorize(line, matches, o.WhenHighlight, o.isStdout)
+		_, err := io.WriteString(w, res+"\n")
+		if err != nil {
+			return err
 		}
 	}
 
@@ -68,17 +70,4 @@ func Run(args []string, w io.Writer, r io.Reader, opts Options) error {
 		return err
 	}
 	return nil
-}
-
-func highlightMatch(s string, start, end int, color Color, when string) string {
-	switch when {
-	case "always":
-		return s[:start] + color.String() + s[start:end] + Reset.String() + s[end:]
-	case "auto":
-		// TODO: Probably need to do something different here
-		return s[:start] + color.String() + s[start:end] + Reset.String() + s[end:]
-	case "never":
-		return s
-	}
-	return s
 }

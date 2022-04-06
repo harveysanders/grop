@@ -1,5 +1,7 @@
 package grop
 
+import "strings"
+
 type Color int
 
 const (
@@ -36,4 +38,30 @@ func (c Color) String() string {
 		return "\033[97m"
 	}
 	return ""
+}
+
+// colorize determines if matches should be highlight based on "--color" option
+// and returns a string with or without colors.
+// If color option is "auto", matches are only highlighted if
+// output it set to stdout.
+func colorize(s string, matches []string, when string, isStdout bool) string {
+	switch when {
+	case "always":
+		return highlightMatches(s, matches)
+	case "auto":
+		if !isStdout {
+			return s
+		}
+		return highlightMatches(s, matches)
+	}
+	return s
+}
+
+// highlightMatches returns a new string with all matches wrapped in
+// ANSI color characters
+func highlightMatches(s string, matches []string) string {
+	for _, m := range matches {
+		s = strings.Replace(s, m, Red.String()+m+Reset.String(), 1)
+	}
+	return s
 }
