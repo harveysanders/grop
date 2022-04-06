@@ -1,6 +1,6 @@
 # grop
 
-grep implementation in Go
+Toy `grep` implementation in Go for learning purposes.
 
 ## Installation
 
