@@ -46,13 +46,13 @@ func Search(w io.Writer, r io.Reader, term string, o Options) error {
 
 func Run(args []string, w io.Writer, r io.Reader, opts Options) error {
 	term := args[0]
-
 	if len(args) == 1 {
 		// Use stdin
 		err := Search(os.Stdout, os.Stdin, term, opts)
 		if err != nil {
 			return err
 		}
+		return nil
 	}
 
 	// More than one arg, assume last arg is path to file
