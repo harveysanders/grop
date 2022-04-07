@@ -12,10 +12,14 @@ go install github.com/harveysanders/grop
 
 Use it just like `grep`
 
+```shell
+$ grop [-i] [--color=when] [term] [file]
+```
+
 `grop` accepts input files:
 
 ```shell
-$ grop  go go.mod
+$ grop go go.mod
 
 go 1.17
 ```
@@ -33,8 +37,8 @@ $ curl example.com | grop h1
 
 It currently only supports the following flags
 
-- `--i`
-- `--color`
+- `--i` Case insensitive searches
+- `--color=["always"|"auto"|"never"]` When to highlight matching patterns in results
 
 ## Contributing
 
