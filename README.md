@@ -10,7 +10,7 @@ go install github.com/harveysanders/grop
 
 ## Usage
 
-Use it just like `grep`
+Use it just like `grep`:
 
 ```shell
 $ grop [-i] [--color=when] [term] [file]
@@ -24,7 +24,7 @@ $ grop go go.mod
 go 1.17
 ```
 
-and STDIN
+and `stdin`:
 
 ```shell
 $ curl example.com | grop h1
